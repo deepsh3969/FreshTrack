@@ -6,7 +6,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import { UserProfile } from './types';
 
@@ -24,19 +24,34 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    let unsubscribeDoc: (() => void) | null = null;
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
-        const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
-        if (userDoc.exists()) {
-          setUser(userDoc.data() as UserProfile);
-        }
+        // Listen to user document
+        unsubscribeDoc = onSnapshot(doc(db, 'users', firebaseUser.uid), (docSnap) => {
+          if (docSnap.exists()) {
+            setUser(docSnap.data() as UserProfile);
+          } else {
+            // User is authenticated but no profile yet
+            setUser(null);
+          }
+          setLoading(false);
+        }, (error) => {
+          console.error("Error fetching user profile:", error);
+          setLoading(false);
+        });
       } else {
+        if (unsubscribeDoc) unsubscribeDoc();
         setUser(null);
+        setLoading(false);
       }
-      setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeDoc) unsubscribeDoc();
+    };
   }, []);
 
   if (loading) {
