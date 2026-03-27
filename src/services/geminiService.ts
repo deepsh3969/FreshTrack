@@ -5,7 +5,18 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+let ai: GoogleGenAI | null = null;
+
+function getAI() {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error("GEMINI_API_KEY environment variable is not set. Please configure it in your environment.");
+  }
+  if (!ai) {
+    ai = new GoogleGenAI({ apiKey });
+  }
+  return ai;
+}
 
 export interface ImageAnalysisResult {
   freshness: 'fresh' | 'risky' | 'stale';
@@ -18,7 +29,8 @@ export interface ImageAnalysisResult {
 
 export async function analyzeFoodImage(base64Image: string): Promise<ImageAnalysisResult> {
   try {
-    const response = await ai.models.generateContent({
+    const aiClient = getAI();
+    const response = await aiClient.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: {
         parts: [
