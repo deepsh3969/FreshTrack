@@ -1,0 +1,208 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: userId (UID)
+    // Fields:
+    //   - uid: string (required, immutable) - Firebase Auth UID
+    //   - email: string (required, format: email) - User's email
+    //   - displayName: string (required) - User's display name
+    //   - role: string (required, enum: ['customer', 'vendor']) - User role
+    //   - createdAt: number (required, immutable) - Timestamp of creation
+    //
+    // Collection: vendors
+    // Document ID: vendorId
+    // Fields:
+    //   - id: string (required, immutable) - Vendor ID
+    //   - name: string (required) - Vendor name
+    //   - station: string (required) - Station name or train number
+    //   - rating: number (required) - Average rating
+    //   - totalRatings: number (required) - Total number of ratings
+    //   - hygieneScore: number (required) - Average hygiene score
+    //   - freshnessScore: number (required) - Average freshness score
+    //   - tasteScore: number (required) - Average taste score
+    //   - isBlacklisted: boolean (required) - Whether the vendor is blacklisted
+    //   - illnessReportsToday: number (required) - Number of illness reports in the last 24 hours
+    //
+    // Collection: ratings
+    // Document ID: ratingId
+    // Fields:
+    //   - id: string (required, immutable) - Rating ID
+    //   - userId: string (required, immutable) - User ID who gave the rating
+    //   - vendorId: string (required, immutable) - Vendor ID being rated
+    //   - freshness: number (required, range: 1-5) - Freshness rating
+    //   - taste: number (required, range: 1-5) - Taste rating
+    //   - hygiene: number (required, range: 1-5) - Hygiene rating
+    //   - comment: string (optional, max: 500) - User comment
+    //   - createdAt: number (required, immutable) - Timestamp of the rating
+    //
+    // Collection: illnessReports
+    // Document ID: reportId
+    // Fields:
+    //   - id: string (required, immutable) - Report ID
+    //   - userId: string (required, immutable) - User ID who reported
+    //   - vendorId: string (required, immutable) - Vendor ID reported
+    //   - timestamp: number (required, immutable) - Timestamp of the report
+    //   - symptoms: list (required, max: 10) - List of symptoms
+    //
+    // Collection: foodHistory
+    // Document ID: historyId
+    // Fields:
+    //   - id: string (required, immutable) - History ID
+    //   - userId: string (required, immutable) - User ID
+    //   - vendorId: string (required, immutable) - Vendor ID
+    //   - foodName: string (required) - Name of the food item
+    //   - timestamp: number (required, immutable) - Timestamp of consumption
+    //   - pnr: string (optional, size: 10) - Passenger PNR for delivery
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "deepeshideapad22@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function areImmutableFieldsUnchanged(fields) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidUser(data) {
+      return hasRequiredFields(['uid', 'email', 'displayName', 'role', 'createdAt']) &&
+             hasOnlyAllowedFields(['uid', 'email', 'displayName', 'role', 'createdAt']) &&
+             data.uid is string && data.uid.size() > 0 &&
+             data.email is string && isValidEmail(data.email) &&
+             data.displayName is string && data.displayName.size() > 0 && data.displayName.size() < 100 &&
+             data.role in ['customer', 'vendor'] &&
+             data.createdAt is number;
+    }
+
+    function isValidVendor(data) {
+      return hasRequiredFields(['id', 'name', 'station', 'rating', 'totalRatings', 'hygieneScore', 'freshnessScore', 'tasteScore', 'isBlacklisted', 'illnessReportsToday']) &&
+             hasOnlyAllowedFields(['id', 'name', 'station', 'rating', 'totalRatings', 'hygieneScore', 'freshnessScore', 'tasteScore', 'isBlacklisted', 'illnessReportsToday']) &&
+             data.id is string && data.id.size() > 0 &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.station is string && data.station.size() > 0 && data.station.size() < 100 &&
+             data.rating is number && data.rating >= 0 && data.rating <= 5 &&
+             data.totalRatings is number && data.totalRatings >= 0 &&
+             data.hygieneScore is number && data.hygieneScore >= 0 && data.hygieneScore <= 5 &&
+             data.freshnessScore is number && data.freshnessScore >= 0 && data.freshnessScore <= 5 &&
+             data.tasteScore is number && data.tasteScore >= 0 && data.tasteScore <= 5 &&
+             data.isBlacklisted is bool &&
+             data.illnessReportsToday is number && data.illnessReportsToday >= 0;
+    }
+
+    function isValidRating(data) {
+      return hasRequiredFields(['id', 'userId', 'vendorId', 'freshness', 'taste', 'hygiene', 'createdAt']) &&
+             hasOnlyAllowedFields(['id', 'userId', 'vendorId', 'freshness', 'taste', 'hygiene', 'comment', 'createdAt']) &&
+             data.id is string && data.id.size() > 0 &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.vendorId is string && data.vendorId.size() > 0 &&
+             data.freshness is number && data.freshness >= 1 && data.freshness <= 5 &&
+             data.taste is number && data.taste >= 1 && data.taste <= 5 &&
+             data.hygiene is number && data.hygiene >= 1 && data.hygiene <= 5 &&
+             (!('comment' in data) || (data.comment is string && data.comment.size() <= 500)) &&
+             data.createdAt is number;
+    }
+
+    function isValidIllnessReport(data) {
+      return hasRequiredFields(['id', 'userId', 'vendorId', 'timestamp', 'symptoms']) &&
+             hasOnlyAllowedFields(['id', 'userId', 'vendorId', 'timestamp', 'symptoms']) &&
+             data.id is string && data.id.size() > 0 &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.vendorId is string && data.vendorId.size() > 0 &&
+             data.timestamp is number &&
+             data.symptoms is list && data.symptoms.size() > 0 && data.symptoms.size() <= 10;
+    }
+
+    function isValidFoodHistory(data) {
+      return hasRequiredFields(['id', 'userId', 'vendorId', 'foodName', 'timestamp']) &&
+             hasOnlyAllowedFields(['id', 'userId', 'vendorId', 'foodName', 'timestamp', 'pnr']) &&
+             data.id is string && data.id.size() > 0 &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.vendorId is string && data.vendorId.size() > 0 &&
+             data.foodName is string && data.foodName.size() > 0 && data.foodName.size() < 100 &&
+             data.timestamp is number &&
+             (!('pnr' in data) || (data.pnr is string && data.pnr.size() == 10));
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isAuthenticated() && isValidUser(request.resource.data) && (isOwner(userId) || isAdmin());
+      allow update: if isAuthenticated() && isValidUser(request.resource.data) && (isOwner(userId) || isAdmin()) && areImmutableFieldsUnchanged(['uid', 'createdAt', 'role']);
+    }
+
+    match /vendors/{vendorId} {
+      allow read: if isAuthenticated();
+      allow create: if isAdmin() && isValidVendor(request.resource.data);
+      allow update: if (isAdmin() || isAuthenticated()) && isValidVendor(request.resource.data) && areImmutableFieldsUnchanged(['id']);
+      
+      match /foodItems/{itemId} {
+        allow read: if isAuthenticated();
+        allow write: if isAdmin() || (isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'vendor');
+      }
+    }
+
+    match /ratings/{ratingId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isValidRating(request.resource.data);
+      allow update: if isAuthenticated() && isOwner(resource.data.userId) && isValidRating(request.resource.data) && areImmutableFieldsUnchanged(['id', 'userId', 'vendorId', 'createdAt']);
+      allow delete: if isAdmin() || (isAuthenticated() && isOwner(resource.data.userId));
+    }
+
+    match /illnessReports/{reportId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated() && isValidIllnessReport(request.resource.data);
+      allow update: if false; // Reports are immutable
+      allow delete: if isAdmin();
+    }
+
+    match /foodHistory/{historyId} {
+      allow read: if isOwner(resource.data.userId) || isAdmin();
+      allow create: if isAuthenticated() && isValidFoodHistory(request.resource.data);
+      allow update: if false; // History is immutable
+      allow delete: if isOwner(resource.data.userId) || isAdmin();
+    }
+
+    // Default deny
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

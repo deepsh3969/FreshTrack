@@ -1,0 +1,119 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile information including role (customer or vendor).",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email", "description": "User's email" },
+        "displayName": { "type": "string", "description": "User's display name" },
+        "role": { "type": "string", "enum": ["customer", "vendor"], "description": "User role" },
+        "createdAt": { "type": "number", "description": "Timestamp of creation" }
+      },
+      "required": ["uid", "email", "displayName", "role", "createdAt"]
+    },
+    "Vendor": {
+      "title": "Vendor",
+      "description": "Information about a food vendor at a station or on a train.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Vendor ID" },
+        "name": { "type": "string", "description": "Vendor name" },
+        "station": { "type": "string", "description": "Station name or train number" },
+        "rating": { "type": "number", "description": "Average rating" },
+        "totalRatings": { "type": "number", "description": "Total number of ratings" },
+        "hygieneScore": { "type": "number", "description": "Average hygiene score" },
+        "freshnessScore": { "type": "number", "description": "Average freshness score" },
+        "tasteScore": { "type": "number", "description": "Average taste score" },
+        "isBlacklisted": { "type": "boolean", "description": "Whether the vendor is blacklisted" },
+        "illnessReportsToday": { "type": "number", "description": "Number of illness reports in the last 24 hours" }
+      },
+      "required": ["id", "name", "station", "rating", "totalRatings", "hygieneScore", "freshnessScore", "tasteScore", "isBlacklisted", "illnessReportsToday"]
+    },
+    "FoodItem": {
+      "title": "FoodItem",
+      "description": "Information about a food item sold by a vendor.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Food item ID" },
+        "vendorId": { "type": "string", "description": "Vendor ID" },
+        "name": { "type": "string", "description": "Food item name" },
+        "price": { "type": "number", "description": "Price of the item" },
+        "preparedAt": { "type": "number", "description": "Timestamp when the food was prepared" },
+        "category": { "type": "string", "description": "Food category (e.g., Veg, Non-Veg, Snacks)" },
+        "imageUrl": { "type": "string", "description": "URL of the food item image" }
+      },
+      "required": ["id", "vendorId", "name", "price", "preparedAt", "category"]
+    },
+    "Rating": {
+      "title": "Rating",
+      "description": "A user rating for a vendor.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Rating ID" },
+        "userId": { "type": "string", "description": "User ID who gave the rating" },
+        "vendorId": { "type": "string", "description": "Vendor ID being rated" },
+        "freshness": { "type": "number", "description": "Freshness rating (1-5)" },
+        "taste": { "type": "number", "description": "Taste rating (1-5)" },
+        "hygiene": { "type": "number", "description": "Hygiene rating (1-5)" },
+        "comment": { "type": "string", "description": "User comment" },
+        "createdAt": { "type": "number", "description": "Timestamp of the rating" }
+      },
+      "required": ["id", "userId", "vendorId", "freshness", "taste", "hygiene", "createdAt"]
+    },
+    "IllnessReport": {
+      "title": "IllnessReport",
+      "description": "A report of illness after consuming food from a vendor.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Report ID" },
+        "userId": { "type": "string", "description": "User ID who reported" },
+        "vendorId": { "type": "string", "description": "Vendor ID reported" },
+        "timestamp": { "type": "number", "description": "Timestamp of the report" },
+        "symptoms": { "type": "array", "items": { "type": "string" }, "description": "List of symptoms" }
+      },
+      "required": ["id", "userId", "vendorId", "timestamp", "symptoms"]
+    },
+    "FoodHistory": {
+      "title": "FoodHistory",
+      "description": "A record of what a user ate and where.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "History ID" },
+        "userId": { "type": "string", "description": "User ID" },
+        "vendorId": { "type": "string", "description": "Vendor ID" },
+        "foodName": { "type": "string", "description": "Name of the food item" },
+        "timestamp": { "type": "number", "description": "Timestamp of consumption" },
+        "pnr": { "type": "string", "description": "Passenger PNR for delivery" }
+      },
+      "required": ["id", "userId", "vendorId", "foodName", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile documents."
+    },
+    "/vendors/{vendorId}": {
+      "schema": "Vendor",
+      "description": "Vendor documents."
+    },
+    "/vendors/{vendorId}/foodItems/{itemId}": {
+      "schema": "FoodItem",
+      "description": "Food items sold by a specific vendor."
+    },
+    "/ratings/{ratingId}": {
+      "schema": "Rating",
+      "description": "Vendor ratings."
+    },
+    "/illnessReports/{reportId}": {
+      "schema": "IllnessReport",
+      "description": "Illness reports."
+    },
+    "/foodHistory/{historyId}": {
+      "schema": "FoodHistory",
+      "description": "User food history."
+    }
+  }
+}

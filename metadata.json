@@ -1,0 +1,8 @@
+{
+  "name": "Food Freshness Verifier",
+  "description": "A real-time food safety and freshness verification app for train travelers, featuring vendor ratings, freshness timers, and AI-powered image analysis.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera"
+  ]
+}
