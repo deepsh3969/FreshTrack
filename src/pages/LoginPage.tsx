@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   GoogleAuthProvider, 
   signInWithPopup, 
@@ -35,40 +35,74 @@ const SSOButtons = ({ onGoogleClick }: { onGoogleClick: () => void }) => (
   </div>
 );
 
-const Hero = ({ type, active, title, text, buttonText, onClick }: any) => (
-  <div 
-    className={`hero ${type}`}
-    style={{ 
-      transform: active ? 'translateX(0)' : (type === 'signup' ? 'translateX(-100%)' : 'translateX(100%)'),
-      opacity: active ? 1 : 0,
-      pointerEvents: active ? 'auto' : 'none'
-    }}
-  >
-    <h2>{title}</h2>
-    <p>{text}</p>
-    <button type="button" onClick={onClick}>
-      {buttonText}
-    </button>
-  </div>
-);
+const Hero = ({ type, active, title, text, buttonText, onClick }: any) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-const AuthForm = ({ type, active, title, children, onGoogleClick, onSubmit }: any) => (
-  <div 
-    className={`auth-form ${type}`}
-    style={{ 
-      transform: active ? 'translateX(0)' : (type === 'signup' ? 'translateX(100%)' : 'translateX(-100%)'),
-      opacity: active ? 1 : 0,
-      pointerEvents: active ? 'auto' : 'none'
-    }}
-  >
-    <h2>{title}</h2>
-    <SSOButtons onGoogleClick={onGoogleClick} />
-    <p>Or use your email address</p>
-    <form onSubmit={onSubmit}>
-      {children}
-    </form>
-  </div>
-);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const getTransform = () => {
+    if (isMobile) {
+      return active ? 'translateY(0)' : (type === 'signup' ? 'translateY(-100%)' : 'translateY(100%)');
+    }
+    return active ? 'translateX(0)' : (type === 'signup' ? 'translateX(-100%)' : 'translateX(100%)');
+  };
+
+  return (
+    <div 
+      className={`hero ${type}`}
+      style={{ 
+        transform: getTransform(),
+        opacity: active ? 1 : 0,
+        pointerEvents: active ? 'auto' : 'none'
+      }}
+    >
+      <h2>{title}</h2>
+      <p>{text}</p>
+      <button type="button" onClick={onClick}>
+        {buttonText}
+      </button>
+    </div>
+  );
+};
+
+const AuthForm = ({ type, active, title, children, onGoogleClick, onSubmit }: any) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const getTransform = () => {
+    if (isMobile) {
+      return active ? 'translateY(0)' : (type === 'signup' ? 'translateY(100%)' : 'translateY(-100%)');
+    }
+    return active ? 'translateX(0)' : (type === 'signup' ? 'translateX(100%)' : 'translateX(-100%)');
+  };
+
+  return (
+    <div 
+      className={`auth-form ${type}`}
+      style={{ 
+        transform: getTransform(),
+        opacity: active ? 1 : 0,
+        pointerEvents: active ? 'auto' : 'none'
+      }}
+    >
+      <h2>{title}</h2>
+      <SSOButtons onGoogleClick={onGoogleClick} />
+      <p>Or use your email address</p>
+      <form onSubmit={onSubmit}>
+        {children}
+      </form>
+    </div>
+  );
+};
 
 export default function LoginPage() {
   const [searchParams] = useSearchParams();
@@ -179,7 +213,11 @@ export default function LoginPage() {
       <div className="auth-card">
         <div
           className="card-bg"
-          style={{ transform: isSignup ? 'translateX(0)' : 'translateX(100%)' }}
+          style={{ 
+            transform: isSignup 
+              ? 'translate(0, 0)' 
+              : (window.innerWidth < 768 ? 'translateY(100%)' : 'translateX(100%)') 
+          }}
         />
         
         <Hero

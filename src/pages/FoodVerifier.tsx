@@ -114,7 +114,7 @@ export default function FoodVerifier() {
         {image && !analyzing && !result && (
           <button
             onClick={handleAnalyze}
-            className="w-full py-4 bg-orange-500 text-white rounded-2xl font-bold shadow-lg shadow-orange-200 hover:bg-orange-600 transition-all"
+            className="w-full py-4 bg-orange-500 text-white rounded-2xl font-bold shadow-lg shadow-orange-200 hover:bg-orange-600 transition-all active:scale-95"
           >
             Verify Freshness
           </button>

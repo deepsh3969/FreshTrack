@@ -48,8 +48,77 @@ const MOCK_TRAINS = [
       { name: 'Pt Deen Dayal Upadhyaya Jn', code: 'DDU', arrivalTime: '02:00', departureTime: '02:10' },
       { name: 'Patna Jn', code: 'PNBE', arrivalTime: '04:40', departureTime: '04:50' },
     ]
+  },
+  {
+    number: '12951',
+    name: 'Mumbai Rajdhani',
+    route: [
+      { name: 'Mumbai Central', code: 'MMCT', arrivalTime: '16:35', departureTime: '16:35' },
+      { name: 'Surat', code: 'ST', arrivalTime: '19:37', departureTime: '19:42' },
+      { name: 'Vadodara Jn', code: 'BRC', arrivalTime: '21:07', departureTime: '21:17' },
+      { name: 'Ratlam Jn', code: 'RTM', arrivalTime: '00:25', departureTime: '00:28' },
+      { name: 'Kota Jn', code: 'KOTA', arrivalTime: '03:15', departureTime: '03:20' },
+      { name: 'New Delhi', code: 'NDLS', arrivalTime: '08:32', departureTime: '08:32' },
+    ]
+  },
+  {
+    number: '12301',
+    name: 'Howrah Rajdhani',
+    route: [
+      { name: 'Howrah Jn', code: 'HWH', arrivalTime: '16:50', departureTime: '16:50' },
+      { name: 'Asansol Jn', code: 'ASN', arrivalTime: '18:57', departureTime: '18:59' },
+      { name: 'Dhanbad Jn', code: 'DHN', arrivalTime: '19:55', departureTime: '20:00' },
+      { name: 'Gaya Jn', code: 'GAYA', arrivalTime: '22:31', departureTime: '22:34' },
+      { name: 'Pt Deen Dayal Upadhyaya Jn', code: 'DDU', arrivalTime: '00:45', departureTime: '00:55' },
+      { name: 'Prayagraj Jn', code: 'PRYJ', arrivalTime: '02:43', departureTime: '02:45' },
+      { name: 'Kanpur Central', code: 'CNB', arrivalTime: '04:50', departureTime: '04:55' },
+      { name: 'New Delhi', code: 'NDLS', arrivalTime: '10:00', departureTime: '10:00' },
+    ]
+  },
+  {
+    number: '22436',
+    name: 'Vande Bharat Express',
+    route: [
+      { name: 'New Delhi', code: 'NDLS', arrivalTime: '06:00', departureTime: '06:00' },
+      { name: 'Kanpur Central', code: 'CNB', arrivalTime: '10:08', departureTime: '10:10' },
+      { name: 'Prayagraj Jn', code: 'PRYJ', arrivalTime: '12:08', departureTime: '12:10' },
+      { name: 'Varanasi Jn', code: 'BSB', arrivalTime: '14:00', departureTime: '14:00' },
+    ]
   }
 ];
+
+const TRENDING_DISHES_BY_STATION: Record<string, { name: string; vendor: string; img: string; price: string }[]> = {
+  'NDLS': [
+    { name: 'Amritsari Kulcha', vendor: 'Delhi Delights', img: 'https://images.unsplash.com/photo-1601050633647-8f8f5f39d1ff?q=80&w=800&auto=format&fit=crop', price: '120' },
+    { name: 'Butter Chicken', vendor: 'Mughal Kitchen', img: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=800&auto=format&fit=crop', price: '350' },
+    { name: 'Chole Bhature', vendor: 'Pindi Express', img: 'https://images.unsplash.com/photo-1626132646529-500637532537?q=80&w=800&auto=format&fit=crop', price: '150' },
+  ],
+  'MTJ': [
+    { name: 'Mathura Peda', vendor: 'Brijwasi Sweets', img: 'https://images.unsplash.com/photo-1589113103503-49683e89bc73?q=80&w=800&auto=format&fit=crop', price: '200' },
+    { name: 'Kachori Sabzi', vendor: 'Krishna Bhojnalaya', img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?q=80&w=800&auto=format&fit=crop', price: '80' },
+    { name: 'Lassi', vendor: 'Radhe Dairy', img: 'https://images.unsplash.com/photo-1571153639161-322c55a14554?q=80&w=800&auto=format&fit=crop', price: '60' },
+  ],
+  'AGC': [
+    { name: 'Agra Petha', vendor: 'Panchi Petha', img: 'https://images.unsplash.com/photo-1589113103503-49683e89bc73?q=80&w=800&auto=format&fit=crop', price: '180' },
+    { name: 'Bedai Jalebi', vendor: 'Agra Sweets', img: 'https://images.unsplash.com/photo-1626132646529-500637532537?q=80&w=800&auto=format&fit=crop', price: '100' },
+    { name: 'Mughlai Thali', vendor: 'Taj Kitchen', img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=800&auto=format&fit=crop', price: '280' },
+  ],
+  'MMCT': [
+    { name: 'Vada Pav', vendor: 'Mumbai Bites', img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?q=80&w=800&auto=format&fit=crop', price: '40' },
+    { name: 'Pav Bhaji', vendor: 'Chowpatty Express', img: 'https://images.unsplash.com/photo-1601050633647-8f8f5f39d1ff?q=80&w=800&auto=format&fit=crop', price: '150' },
+    { name: 'Misal Pav', vendor: 'Puneri Tadka', img: 'https://images.unsplash.com/photo-1606491956689-2ea8c5119c85?q=80&w=800&auto=format&fit=crop', price: '120' },
+  ],
+  'HWH': [
+    { name: 'Fish Curry', vendor: 'Bengali Bhoj', img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=800&auto=format&fit=crop', price: '220' },
+    { name: 'Rosogolla', vendor: 'KC Das', img: 'https://images.unsplash.com/photo-1589113103503-49683e89bc73?q=80&w=800&auto=format&fit=crop', price: '100' },
+    { name: 'Luchi Alur Dom', vendor: 'Howrah Kitchen', img: 'https://images.unsplash.com/photo-1601050633647-8f8f5f39d1ff?q=80&w=800&auto=format&fit=crop', price: '140' },
+  ],
+  'DEFAULT': [
+    { name: 'Paneer Butter Masala', vendor: 'Railway Kitchen 1', img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=800&auto=format&fit=crop', price: '240' },
+    { name: 'Veg Dum Biryani', vendor: 'Trackside Treats', img: 'https://images.unsplash.com/photo-1563379091339-03b21bc4a4f8?q=80&w=800&auto=format&fit=crop', price: '180' },
+    { name: 'Masala Dosa', vendor: 'South Express', img: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?q=80&w=800&auto=format&fit=crop', price: '120' },
+  ]
+};
 
 export default function Dashboard({ user }: DashboardProps) {
   const [vendors, setVendors] = useState<Vendor[]>([]);
@@ -428,7 +497,7 @@ export default function Dashboard({ user }: DashboardProps) {
               {!selectedTrain ? (
                 <button 
                   onClick={() => setShowTrainSearch(true)}
-                  className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-orange-500/20"
+                  className="w-full sm:w-auto px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-orange-500/20 active:scale-95"
                   aria-label="Track your journey"
                 >
                   Track Journey
@@ -436,7 +505,7 @@ export default function Dashboard({ user }: DashboardProps) {
               ) : (
                 <button 
                   onClick={() => setSelectedTrain(null)}
-                  className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all border border-white/10"
+                  className="w-full sm:w-auto px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all border border-white/10 active:scale-95"
                   aria-label="Change tracked train"
                 >
                   Change Train
@@ -448,7 +517,7 @@ export default function Dashboard({ user }: DashboardProps) {
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex gap-4 mb-8"
+                className="flex flex-col sm:flex-row gap-4 mb-8"
               >
                 <div className="flex-1 relative">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
@@ -462,7 +531,7 @@ export default function Dashboard({ user }: DashboardProps) {
                 </div>
                 <button 
                   onClick={handleTrainSearch}
-                  className="px-8 py-4 bg-white text-slate-900 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all"
+                  className="w-full sm:w-auto px-8 py-4 bg-white text-slate-900 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all whitespace-nowrap"
                   aria-label="Search for train"
                 >
                   Search
@@ -559,16 +628,12 @@ export default function Dashboard({ user }: DashboardProps) {
             </div>
             <div>
               <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight">Trending Now</h2>
-              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Most ordered dishes this week</p>
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Most ordered dishes at {station.split('(')[0].trim()}</p>
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { name: 'Paneer Butter Masala', vendor: 'Railway Kitchen 1', img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=800&auto=format&fit=crop', price: '240' },
-            { name: 'Veg Dum Biryani', vendor: 'Trackside Treats', img: 'https://images.unsplash.com/photo-1563379091339-03b21bc4a4f8?q=80&w=800&auto=format&fit=crop', price: '180' },
-            { name: 'Masala Dosa', vendor: 'South Express', img: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?q=80&w=800&auto=format&fit=crop', price: '120' },
-          ].map((dish, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {(TRENDING_DISHES_BY_STATION[station.match(/\(([^)]+)\)/)?.[1] || 'DEFAULT'] || TRENDING_DISHES_BY_STATION['DEFAULT']).map((dish, i) => (
             <motion.div 
               key={i}
               whileHover={{ y: -5 }}
@@ -812,7 +877,7 @@ export default function Dashboard({ user }: DashboardProps) {
                 </div>
                 <h2 className="text-lg font-black text-slate-900 uppercase tracking-tight">Recent Orders</h2>
               </div>
-              <button className="text-[10px] font-black text-orange-500 uppercase tracking-widest">View All</button>
+              <button className="text-[10px] font-black text-orange-500 uppercase tracking-widest hover:underline transition-all">View All</button>
             </div>
             
             <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
@@ -915,7 +980,7 @@ export default function Dashboard({ user }: DashboardProps) {
                           <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/5 transition-all rounded-[2rem] pointer-events-none"></div>
                           <button 
                             onClick={() => handleAddToPlate(item)}
-                            className="absolute bottom-6 left-6 right-6 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-orange-500 transition-all shadow-xl shadow-slate-900/20 hover:shadow-orange-500/20 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0"
+                            className="absolute bottom-6 left-6 right-6 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-orange-500 transition-all shadow-xl shadow-slate-900/20 hover:shadow-orange-500/20 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 active:scale-95"
                           >
                             Order & Track Safety
                           </button>

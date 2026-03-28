@@ -206,7 +206,7 @@ export default function VendorDashboard({ user }: VendorDashboardProps) {
           <h2 className="text-xl font-bold text-slate-900">Your Menu Items</h2>
           <button 
             onClick={() => setShowAddForm(!showAddForm)}
-            className="flex items-center px-4 py-2 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-colors"
+            className="flex items-center justify-center px-4 py-2 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all active:scale-95 w-full sm:w-auto"
           >
             <Plus className="w-4 h-4 mr-2" /> Add New Item
           </button>
@@ -294,17 +294,17 @@ export default function VendorDashboard({ user }: VendorDashboardProps) {
                 />
               </div>
             </div>
-            <div className="flex justify-end space-x-3">
+            <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
               <button 
                 type="button"
                 onClick={() => setShowAddForm(false)}
-                className="px-6 py-2 text-slate-500 font-bold text-sm"
+                className="px-6 py-3 text-slate-500 font-bold text-sm hover:bg-slate-50 rounded-xl transition-all"
               >
                 Cancel
               </button>
               <button 
                 type="submit"
-                className="px-6 py-2 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600"
+                className="px-6 py-3 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all active:scale-95 shadow-lg shadow-orange-500/20"
               >
                 Save Item
               </button>
