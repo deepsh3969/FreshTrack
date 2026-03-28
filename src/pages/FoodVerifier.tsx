@@ -8,6 +8,7 @@ import { analyzeFoodImage, ImageAnalysisResult } from '../services/geminiService
 import { motion, AnimatePresence } from 'motion/react';
 import { Camera, Upload, ShieldCheck, AlertTriangle, Clock, RefreshCw, ChevronLeft, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import FoodReviewSystem from '../components/FoodReviewSystem';
 
 export default function FoodVerifier() {
   const [image, setImage] = useState<string | null>(null);
@@ -244,6 +245,9 @@ export default function FoodVerifier() {
           </div>
         )}
       </div>
+      
+      {/* Food Review System */}
+      <FoodReviewSystem />
     </div>
   );
 }
