@@ -17,7 +17,7 @@ export default function LandingPage() {
             <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center shadow-lg shadow-green-200">
               <Train className="w-6 h-6 text-white" />
             </div>
-            <span className="font-black text-xl tracking-tight text-slate-900 uppercase">Fresh <span className="text-green-600">Food</span></span>
+            <span className="font-black text-xl tracking-tight text-slate-900 uppercase">Fresh<span className="text-green-600">Track</span></span>
           </div>
           
           <div className="hidden md:flex items-center space-x-8">
@@ -866,7 +866,7 @@ export default function LandingPage() {
         <div className="absolute inset-0">
           <img 
             src="https://images.unsplash.com/photo-1493770348161-369560ae357d?q=80&w=2000&auto=format&fit=crop" 
-            alt="Fresh Food Background" 
+            alt="FreshTrack Background" 
             className="w-full h-full object-cover opacity-20"
             referrerPolicy="no-referrer"
           />
@@ -935,7 +935,7 @@ export default function LandingPage() {
                 <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center border border-white/10">
                   <Train className="w-6 h-6 text-white" />
                 </div>
-                <span className="font-black text-2xl tracking-tight uppercase">Fresh <span className="text-green-500">Food</span></span>
+                <span className="font-black text-2xl tracking-tight uppercase">Fresh<span className="text-green-500">Track</span></span>
               </div>
               <p className="text-slate-400 max-w-sm leading-relaxed mb-8 font-medium">
                 Dedicated to ensuring safe and fresh food for train travelers across India. Your health is our priority.
@@ -995,7 +995,7 @@ export default function LandingPage() {
 
           <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-slate-500 font-bold">
             <div className="max-w-2xl text-center md:text-left">
-              <p className="mb-2">© 2026 Food Freshness Verifier. All rights reserved.</p>
+              <p className="mb-2">© 2026 FreshTrack. All rights reserved.</p>
               <p className="text-orange-500/80 flex items-center justify-center md:justify-start">
                 <AlertTriangle className="w-3 h-3 mr-1" />
                 Warning: The information provided above is for trial purposes only. Please verify food safety independently before consumption.

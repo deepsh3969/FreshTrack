@@ -27,10 +27,10 @@ export default function Navbar({ user }: NavbarProps) {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 px-6 py-3 flex items-center justify-between z-50 md:top-0 md:bottom-auto md:border-t-0 md:border-b">
       <div className="hidden md:flex items-center space-x-2">
-        <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center shadow-lg shadow-orange-200">
+        <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center shadow-lg shadow-green-200">
           <Train className="w-5 h-5 text-white" />
         </div>
-        <span className="font-bold text-slate-900">Food Freshness</span>
+        <span className="font-bold text-slate-900">Fresh<span className="text-green-600">Track</span></span>
       </div>
 
       <div className="flex items-center justify-around w-full md:w-auto md:space-x-8">

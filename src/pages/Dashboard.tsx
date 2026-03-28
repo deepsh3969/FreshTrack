@@ -433,7 +433,7 @@ export default function Dashboard({ user }: DashboardProps) {
       <section className="mb-10 relative h-[300px] rounded-[3rem] overflow-hidden shadow-2xl">
         <img 
           src="https://images.unsplash.com/photo-1493770348161-369560ae357d?q=80&w=2000&auto=format&fit=crop" 
-          alt="Fresh Food"
+          alt="FreshTrack"
           className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
         />
@@ -448,7 +448,7 @@ export default function Dashboard({ user }: DashboardProps) {
               <span className="text-sm font-black uppercase tracking-[0.3em]">100% Safety Guaranteed</span>
             </div>
             <h1 className="text-5xl font-black text-white tracking-tight mb-4 leading-tight">
-              Fresh Food for your <br />
+              FreshTrack for your <br />
               <span className="text-orange-500">Train Journey</span>
             </h1>
             <p className="text-white/70 font-medium max-w-md text-lg">
@@ -1149,7 +1149,7 @@ export default function Dashboard({ user }: DashboardProps) {
 
       <footer className="py-10 text-center">
         <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.3em]">
-          © 2026 Fresh Food Verifier • Safe Travels
+          © 2026 FreshTrack • Safe Travels
         </p>
         <p className="text-red-400 text-[8px] font-black uppercase tracking-[0.2em] mt-2">
           Warning: This application is for trial and demonstration purposes only.
