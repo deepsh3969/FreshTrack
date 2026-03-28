@@ -27,16 +27,16 @@ export interface ImageAnalysisResult {
   isVeg: boolean;
 }
 
-export async function analyzeFoodImage(base64Image: string): Promise<ImageAnalysisResult> {
+export async function analyzeFoodImage(base64Image: string, mimeType: string = "image/jpeg"): Promise<ImageAnalysisResult> {
   try {
     const aiClient = getAI();
     const response = await aiClient.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-3.1-flash-lite-preview",
       contents: {
         parts: [
           {
             inlineData: {
-              mimeType: "image/jpeg",
+              mimeType: mimeType,
               data: base64Image,
             },
           },
@@ -62,10 +62,20 @@ export async function analyzeFoodImage(base64Image: string): Promise<ImageAnalys
       },
     });
 
-    const result = JSON.parse(response.text || '{}');
+    if (!response.text) {
+      throw new Error("No response text received from the AI model. This might be due to safety filters or an empty response.");
+    }
+
+    const result = JSON.parse(response.text);
     return result as ImageAnalysisResult;
-  } catch (error) {
-    console.error("Error analyzing food image:", error);
-    throw new Error("Failed to analyze image. Please try again.");
+  } catch (error: any) {
+    console.error("Detailed Error analyzing food image:", error);
+    
+    // Check for specific API errors
+    if (error.message?.includes("API_KEY_INVALID")) {
+      throw new Error("Invalid API Key. Please check your Gemini API key configuration.");
+    }
+    
+    throw new Error(error.message || "Failed to analyze image. Please try again.");
   }
 }

@@ -36,8 +36,9 @@ export default function FoodVerifier() {
     setAnalyzing(true);
     setError(null);
     try {
-      const base64Data = image.split(',')[1];
-      const analysis = await analyzeFoodImage(base64Data);
+      const [header, base64Data] = image.split(',');
+      const mimeType = header.match(/:(.*?);/)?.[1] || 'image/jpeg';
+      const analysis = await analyzeFoodImage(base64Data, mimeType);
       setResult(analysis);
     } catch (err: any) {
       console.error(err);
